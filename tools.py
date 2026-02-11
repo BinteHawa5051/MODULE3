@@ -177,15 +177,16 @@ class ToolRouter:
         query_lower = query.lower()
         needed_tools = []
         
-        # Check for web search needs
-        web_keywords = ["search", "find", "look up", "latest", "current news", "google", 
-                       "what is", "who is", "information about", "tell me about"]
+        # Check for web search needs - be more aggressive
+        web_keywords = ["search", "find", "look up", "latest", "current", "news", "google", 
+                       "what is", "who is", "information about", "tell me about", "trends",
+                       "recent", "update", "happening", "going on"]
         if any(word in query_lower for word in web_keywords):
             needed_tools.append("web_search")
         
         # Check for datetime needs
         time_keywords = ["time", "date", "today", "now", "when", "current day", 
-                        "what day", "what time", "clock"]
+                        "what day", "what time", "clock", "year", "month"]
         if any(word in query_lower for word in time_keywords):
             needed_tools.append("datetime")
         

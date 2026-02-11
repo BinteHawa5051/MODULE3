@@ -205,6 +205,13 @@ if prompt := st.chat_input("Ask me anything..."):
             # Detect needed tools
             needed_tools = st.session_state.tool_router.detect_tool_need(prompt)
             
+            # Debug: Show tool detection
+            with st.expander("🔧 Debug: Tool Detection", expanded=False):
+                st.write(f"**Query:** {prompt}")
+                st.write(f"**Detected tools:** {needed_tools if needed_tools else 'None'}")
+                st.write(f"**Serper API key provided:** {'Yes' if serper_key else 'No'}")
+                st.write(f"**Network speed:** {network_speed}")
+            
             # Get RAG context if available
             rag_context = ""
             if st.session_state.rag_pipeline and len(st.session_state.rag_pipeline.vector_store.chunks) > 0:
@@ -220,17 +227,35 @@ if prompt := st.chat_input("Ask me anything..."):
             # Execute tools if needed
             tool_results = {}
             tool_outputs = {}
+            
+            # Show detected tools
+            if needed_tools:
+                st.info(f"🛠️ Tools detected: {', '.join(needed_tools)}")
+            
             for tool in needed_tools:
                 if tool == "web_search":
+                    if not serper_key:
+                        st.warning("⚠️ Web search detected but Serper API key not provided. Add it in sidebar for web search.")
+                        continue
                     depth = "shallow" if network_speed == "slow" else "deep"
                     result = st.session_state.tool_router.route(prompt, tool, depth=depth)
                     tool_results[tool] = result
-                    if "results" in result:
-                        st.info(f"🔍 Web Search ({depth}): Found {result['count']} results")
+                    if "results" in result and result["results"]:
+                        st.success(f"🔍 Web Search ({depth}): Found {result['count']} results")
+                        with st.expander("🌐 Search Results"):
+                            for i, res in enumerate(result["results"][:3], 1):
+                                st.markdown(f"**{i}. {res['title']}**")
+                                st.caption(res['link'])
+                                st.write(res['snippet'])
+                                st.divider()
+                    elif "error" in result:
+                        st.error(f"❌ Web search failed: {result['error']}")
+                        
                 elif tool == "datetime":
                     result = st.session_state.tool_router.route(prompt, tool)
                     tool_results[tool] = result
-                    st.info(f"🕐 DateTime: {result.get('datetime', 'N/A')}")
+                    st.success(f"🕐 DateTime: {result.get('datetime', 'N/A')}")
+                    
                 elif tool == "create_pdf":
                     # Will be created after getting response
                     pass
