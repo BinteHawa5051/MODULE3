@@ -52,6 +52,13 @@ with st.sidebar:
             if st.session_state.tool_router is None:
                 st.session_state.tool_router = None
     
+    # Update ToolRouter if Serper key changes
+    if hf_key and st.session_state.tool_router is not None:
+        # Reinitialize ToolRouter with current Serper key
+        st.session_state.tool_router = ToolRouter(serper_key if serper_key else None)
+        if serper_key:
+            st.caption("🔍 Web search enabled with Serper API")
+    
     st.divider()
     
     # Network simulation
