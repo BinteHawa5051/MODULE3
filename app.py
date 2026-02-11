@@ -35,11 +35,22 @@ with st.sidebar:
     
     # Initialize components when API key is provided
     if hf_key and st.session_state.reasoning_engine is None:
-        os.environ["HUGGINGFACEHUB_API_TOKEN"] = hf_key
-        st.session_state.reasoning_engine = ReasoningEngine(hf_key)
-        st.session_state.rag_pipeline = RAGPipeline(hf_key)
-        st.session_state.tool_router = ToolRouter(serper_key if serper_key else None)
-        st.success("✅ Agent initialized with HuggingFace Mistral-7B!")
+        try:
+            os.environ["HUGGINGFACEHUB_API_TOKEN"] = hf_key
+            st.session_state.reasoning_engine = ReasoningEngine(hf_key)
+            st.session_state.rag_pipeline = RAGPipeline(hf_key)
+            st.session_state.tool_router = ToolRouter(serper_key if serper_key else None)
+            st.success("✅ Agent initialized with HuggingFace Mistral-7B!")
+        except Exception as e:
+            st.error(f"❌ Initialization failed: {str(e)}")
+            st.info("💡 Make sure all dependencies are installed: pip install -r requirements.txt")
+            # Initialize with None to prevent errors
+            if st.session_state.reasoning_engine is None:
+                st.session_state.reasoning_engine = None
+            if st.session_state.rag_pipeline is None:
+                st.session_state.rag_pipeline = None
+            if st.session_state.tool_router is None:
+                st.session_state.tool_router = None
     
     st.divider()
     
@@ -168,6 +179,10 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("Ask me anything..."):
     if not hf_key:
         st.error("⚠️ Please enter your HuggingFace API key in the sidebar")
+        st.stop()
+    
+    if not st.session_state.reasoning_engine or not st.session_state.tool_router:
+        st.error("⚠️ Agent not initialized. Please check your API key and dependencies.")
         st.stop()
     
     # Add user message
