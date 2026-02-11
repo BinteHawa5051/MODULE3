@@ -1,0 +1,149 @@
+QUICK START GUIDE - Adaptive Reasoning Agent
+============================================
+
+🚀 APP IS RUNNING AT: http://localhost:8501
+
+STEP 1: SETUP (Already Done!)
+==============================
+✅ HuggingFace API Key: Pre-configured
+✅ Model: Mistral-7B-Instruct-v0.2
+✅ Embeddings: sentence-transformers/all-MiniLM-L6-v2
+
+STEP 2: TEST EACH TOOL
+=======================
+
+📅 DATETIME TOOL (Always Works)
+--------------------------------
+Try these:
+→ "What time is it?"
+→ "What day is today?"
+→ "Tell me the current date"
+
+Result: Instant response with current date/time
+
+
+🔍 WEB SEARCH TOOL (Needs Serper API Key)
+------------------------------------------
+1. Add Serper API key in sidebar (optional)
+2. Try these:
+   → "Search for latest Python news"
+   → "Find information about AI"
+   → "Look up machine learning"
+
+Result: Shows search results in reasoning panel
+- Slow network = 3 results (shallow)
+- Fast network = 10 results (deep)
+
+
+📄 DOCUMENT CREATION TOOLS (Always Works)
+------------------------------------------
+Try these:
+→ "Create a PDF about machine learning"
+→ "Generate a Word document on Python"
+→ "Make a summary and give me as PDF"
+
+Result: Download button appears below response
+- PDF: Uses reportlab
+- Word: Uses python-docx
+- Excel: Uses openpyxl
+
+
+📚 RAG TOOL (Upload Documents First)
+-------------------------------------
+1. Click "Upload documents for RAG" in sidebar
+2. Upload PDF, DOCX, or TXT files
+3. Click "Process Documents"
+4. Try these:
+   → "What does my document say about [topic]?"
+   → "Summarize the uploaded document"
+   → "Find information about [keyword] in my files"
+
+Result: Agent uses document context in answers
+
+
+🎯 COMBINED TOOLS
+-----------------
+Try these to use multiple tools:
+→ "What's the date and search for today's news"
+→ "Search for Python tutorials and create a PDF"
+→ "Tell me the time and summarize my document"
+
+
+STEP 3: TEST NETWORK ADAPTATION
+================================
+
+1. Go to sidebar → Network Settings
+2. Try different modes:
+   - Slow: Fast reasoning (1 step)
+   - Medium: Standard reasoning (2 steps)
+   - Fast: Deep reasoning (3 steps)
+   - Auto: Detects automatically
+
+3. Ask same question in different modes
+4. Click "🧠 Reasoning Process" to see differences
+
+
+STEP 4: VIEW TOOL USAGE
+========================
+
+After each query:
+1. Expand "🧠 Reasoning Process"
+2. See:
+   - Mode used (fast/standard/deep)
+   - Network speed detected
+   - Tools detected
+   - Tools actually used
+   - Execution time
+   - RAG chunks used
+
+
+EXAMPLE SESSION
+===============
+
+Query 1: "What time is it?"
+→ Tool: datetime
+→ Mode: Adapts to network
+→ Result: Current time shown
+
+Query 2: "Search for AI news"
+→ Tool: web_search
+→ Mode: Adapts to network
+→ Result: Search results + answer
+
+Query 3: "Create a PDF summary"
+→ Tool: create_pdf
+→ Mode: Adapts to network
+→ Result: PDF download button
+
+Query 4: Upload doc + "What does it say?"
+→ Tool: RAG
+→ Mode: Adapts to network
+→ Result: Answer using document context
+
+
+TROUBLESHOOTING
+===============
+
+❌ "Serper API key not provided"
+→ Web search needs API key (optional)
+→ Other tools work without it
+
+❌ "No documents uploaded"
+→ RAG needs documents first
+→ Upload in sidebar
+
+✅ All other tools work immediately!
+
+
+FEATURES CHECKLIST
+==================
+✅ Custom reasoning engine (Fast/Standard/Deep)
+✅ Network-adaptive behavior
+✅ Web search (shallow/deep)
+✅ Document creation (PDF/Word/Excel)
+✅ DateTime awareness
+✅ RAG pipeline (native implementation)
+✅ Intelligent tool routing
+✅ Clean UI with reasoning visualization
+✅ HuggingFace models (Mistral-7B)
+✅ Answer quality constant across modes
