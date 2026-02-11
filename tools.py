@@ -147,9 +147,12 @@ class ToolRouter:
     
     def route(self, query: str, tool_name: str, **kwargs) -> Any:
         """Route to appropriate tool based on request"""
-        if tool_name == "web_search" and self.web_search:
-            depth = kwargs.get("depth", "shallow")
-            return self.web_search.search(query, depth)
+        if tool_name == "web_search":
+            if self.web_search:
+                depth = kwargs.get("depth", "shallow")
+                return self.web_search.search(query, depth)
+            else:
+                return {"error": "Serper API key not provided. Add it in the sidebar to enable web search."}
         
         elif tool_name == "datetime":
             return self.datetime_tool.get_current_datetime()

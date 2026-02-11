@@ -234,13 +234,16 @@ if prompt := st.chat_input("Ask me anything..."):
             
             for tool in needed_tools:
                 if tool == "web_search":
-                    if not serper_key:
-                        st.warning("⚠️ Web search detected but Serper API key not provided. Add it in sidebar for web search.")
-                        continue
                     depth = "shallow" if network_speed == "slow" else "deep"
                     result = st.session_state.tool_router.route(prompt, tool, depth=depth)
                     tool_results[tool] = result
-                    if "results" in result and result["results"]:
+                    
+                    if "error" in result:
+                        if "Serper API key not provided" in result["error"]:
+                            st.warning("⚠️ Web search requires Serper API key. Add it in sidebar to enable web search.")
+                        else:
+                            st.error(f"❌ Web search failed: {result['error']}")
+                    elif "results" in result and result["results"]:
                         st.success(f"🔍 Web Search ({depth}): Found {result['count']} results")
                         with st.expander("🌐 Search Results"):
                             for i, res in enumerate(result["results"][:3], 1):
@@ -248,8 +251,6 @@ if prompt := st.chat_input("Ask me anything..."):
                                 st.caption(res['link'])
                                 st.write(res['snippet'])
                                 st.divider()
-                    elif "error" in result:
-                        st.error(f"❌ Web search failed: {result['error']}")
                         
                 elif tool == "datetime":
                     result = st.session_state.tool_router.route(prompt, tool)
